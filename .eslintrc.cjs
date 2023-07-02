@@ -12,7 +12,7 @@ module.exports = {
     plugins: ['react-refresh'],
     rules: {
         'react-refresh/only-export-components': 'warn',
-        eqeqeq: 'off',
+        eqeqeq: ['error', 'smart'],
         curly: 'error',
         quotes: ['error', 'single'],
     },
