@@ -10,7 +10,7 @@ import {
     FIREBASE_STORAGE_BUCKET,
     FIREBASE_PROJECT_ID,
     FIREBASE_APP_ID,
-} from '../common/constants';
+} from '../common/constants.ts';
 
 const firebaseConfig = {
     apiKey: FIREBASE_API_KEY,
