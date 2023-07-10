@@ -9,9 +9,9 @@ import {
     type DataSnapshot,
     type Query,
 } from 'firebase/database';
-import { DICEBEAR_AVATAR_BASE_URL } from '../common/constants';
-import { Roles } from '../common/userEnum';
-import { db } from '../config/firebase';
+import { DICEBEAR_AVATAR_BASE_URL } from '../common/constants.ts';
+import { Roles } from '../common/userEnum.ts';
+import { db } from '../config/firebase.ts';
 
 // interface userData {
 //     uid: string;

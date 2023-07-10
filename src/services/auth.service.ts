@@ -5,7 +5,7 @@ import {
     type UserCredential,
 } from 'firebase/auth';
 import { equalTo, get, orderByChild, query, ref } from 'firebase/database';
-import { auth, db } from '../config/firebase';
+import { auth, db } from '../config/firebase.ts';
 
 export const registerUser = (
     email: string,
