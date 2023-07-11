@@ -16,7 +16,7 @@ const AuthenticatedRoute = ({ children }: Props): JSX.Element => {
             if (user == null) {
                 navigate('/login');
             } else if (location.pathname === '/') {
-                navigate('/home');
+                navigate('/landing');
             }
         }
     }, [user, loading, navigate]);
