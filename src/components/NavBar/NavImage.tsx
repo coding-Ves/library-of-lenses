@@ -1,6 +1,6 @@
-import { Stack, Box, CardMedia, Avatar, Toolbar } from '@mui/material';
-import { LENS_BOARD_NAV_IMAGE } from '../../common/constants.ts';
+import { Avatar, CardMedia } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { LENS_BOARD_NAV_IMAGE } from '../../common/constants.ts';
 
 const NavImage = () => {
     return (

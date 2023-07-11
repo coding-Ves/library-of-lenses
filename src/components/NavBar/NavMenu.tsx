@@ -1,23 +1,9 @@
-import {
-    AppBar,
-    Toolbar,
-    Container,
-    Tooltip,
-    MenuItem,
-    Button,
-    Menu,
-    IconButton,
-    Typography,
-    Avatar,
-    Box,
-    Divider,
-} from '@mui/material';
+import { AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
+import { AppBar, IconButton, Menu, MenuItem, Toolbar } from '@mui/material';
 import { useState } from 'react';
-import { Menu as MenuIcon } from '@mui/icons-material';
-import { AccountCircle } from '@mui/icons-material';
-import useAuthStore from '../../store/authStore.ts';
-import { logoutUser } from '../../services/auth.service.ts';
 import { Link } from 'react-router-dom';
+import { logoutUser } from '../../services/auth.service.ts';
+import useAuthStore from '../../store/authStore.ts';
 
 const NavMenu = () => {
     const user = useAuthStore((s) => s.user);

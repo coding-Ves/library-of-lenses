@@ -2,9 +2,8 @@ import { Typography } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 import Loader from './components/Loader/Loader.tsx';
-import useLoadingStore from './store/loadingStore.ts';
 import NavBar from './components/NavBar/NavBar.tsx';
-import { LENS_BOARD_NAV_IMAGE } from './common/constants.ts';
+import useLoadingStore from './store/loadingStore.ts';
 
 // App.tsx is used as a Layout component for react router
 
