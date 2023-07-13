@@ -1,14 +1,30 @@
 import { AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
-import { AppBar, IconButton, Menu, MenuItem, Toolbar } from '@mui/material';
+import {
+    AppBar,
+    Avatar,
+    IconButton,
+    Menu,
+    MenuItem,
+    Toolbar,
+} from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { logoutUser } from '../../services/auth.service.ts';
-import useAuthStore from '../../store/authStore.ts';
+import useAuthStore, { resetUser } from '../../store/authStore.ts';
+import { updateSnackbar } from '../../store/snackbarStore.ts';
 
 const NavMenu = () => {
     const user = useAuthStore((s) => s.user);
+    const userData = useAuthStore((s) => s.userData);
+
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+    const handleLogout = () => {
+        resetUser();
+        logoutUser();
+        updateSnackbar('success', 'Logged out. See you later!', true);
+    };
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
@@ -83,7 +99,11 @@ const NavMenu = () => {
                             onClick={handleOpenUserMenu}
                             color='inherit'
                         >
-                            <AccountCircle fontSize='large' />
+                            <Avatar
+                                sx={{ width: 35, height: 35 }}
+                                alt={userData?.username}
+                                src={userData?.avatarURL}
+                            />
                         </IconButton>
                         <Menu
                             sx={{ mt: '43px' }}
@@ -108,7 +128,7 @@ const NavMenu = () => {
                             >
                                 My Account
                             </MenuItem>
-                            <MenuItem onClick={logoutUser}>Logout</MenuItem>
+                            <MenuItem onClick={handleLogout}>Logout</MenuItem>
                         </Menu>
                     </>
                 ) : (
