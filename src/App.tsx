@@ -4,11 +4,31 @@ import { Outlet } from 'react-router-dom';
 import Loader from './components/Loader/Loader.tsx';
 import NavBar from './components/NavBar/NavBar.tsx';
 import useLoadingStore from './store/loadingStore.ts';
+import GlobalSnackbar from './components/GlobalSnackbar/GlobalSnackbar.tsx';
+import { useEffect } from 'react';
+import useAuthStore, { updateUserData } from './store/authStore.ts';
+import { getUserByUsername, getUserByUID } from './services/user.service.ts';
+import { auth } from '../src/config/firebase.ts';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
 // App.tsx is used as a Layout component for react router
 
 const App = () => {
     const loading = useLoadingStore((s) => s.loading);
+    const [user] = useAuthState(auth);
+    const userData = useAuthStore((s) => s.userData);
+
+    useEffect(() => {
+        if (user === null) {
+            return;
+        }
+        if (userData?.email !== user.email) {
+            getUserByUID(user.uid).then((snapshot) => {
+                updateUserData(snapshot.val()[Object.keys(snapshot.val())[0]]);
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [user]);
 
     return (
         <>
@@ -16,6 +36,7 @@ const App = () => {
             <NavBar />
             <Typography variant='h1'>App.js outlet</Typography>
             <Outlet />
+            <GlobalSnackbar />
         </>
     );
 };
