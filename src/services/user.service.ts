@@ -32,9 +32,7 @@ export const getUserByUsername = (username: string): Promise<DataSnapshot> => {
     return get(ref(db, `users/${username}`));
 };
 
-export const getUserByUID = async (
-    uid: string | number | null | undefined
-): Promise<DataSnapshot> => {
+export const getUserByUID = (uid: string): Promise<DataSnapshot> => {
     return get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
 };
 

@@ -22,11 +22,6 @@ const App = () => {
         if (user === null) {
             return;
         }
-        if (userData?.email !== user.email) {
-            getUserByUID(user.uid).then((snapshot) => {
-                updateUserData(snapshot.val()[Object.keys(snapshot.val())[0]]);
-            });
-        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 

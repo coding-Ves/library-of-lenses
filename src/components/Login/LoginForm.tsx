@@ -17,9 +17,12 @@ import { getUserByUID } from '../../services/user.service.ts';
 import { updateUser, updateUserData } from '../../store/authStore.ts';
 import { updateSnackbar } from '../../store/snackbarStore.ts';
 import GlobalSnackbar from '../GlobalSnackbar/GlobalSnackbar.tsx';
+import errorHandler from '../../services/errors.service.ts';
+import useAuthStore from '../../store/authStore.ts';
 
 export const LoginForm = () => {
     const [buttonLoading, setButtonLoading] = useState(false);
+    const user = useAuthStore((s) => s.user);
     const navigate = useNavigate();
 
     interface IFormInputs {
@@ -32,17 +35,12 @@ export const LoginForm = () => {
         password: string;
     };
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = useForm<FormData>();
+    const { register, handleSubmit } = useForm<FormData>();
 
     const onSubmit: SubmitHandler<IFormInputs> = (data) => {
         setButtonLoading(true);
         loginUser(data.email, data.password)
             .then((credential) => {
-                console.log(credential.user);
                 updateUser(credential.user);
                 getUserByUID(credential.user.uid)
                     .then((snapshot) => {
@@ -51,7 +49,10 @@ export const LoginForm = () => {
                         );
                     })
                     .catch((error) => {
-                        updateSnackbar('error', error.message, true);
+                        console.log(error);
+                        const message = errorHandler(error);
+                        updateSnackbar('error', message, true);
+                        setButtonLoading(false);
                     });
             })
             .then(() => {
@@ -62,8 +63,12 @@ export const LoginForm = () => {
                 updateSnackbar('success', 'Login Successful!', true);
             })
             .catch((error) => {
-                updateSnackbar('error', error.message, true);
-                alert(error.message);
+                const message = errorHandler(error);
+                updateSnackbar('error', message, true);
+                setButtonLoading(false);
+            })
+            .finally(() => {
+                setButtonLoading(false);
             });
     };
 
@@ -98,7 +103,6 @@ export const LoginForm = () => {
                     </Typography>
                     <Box
                         component='form'
-                        noValidate
                         onSubmit={handleSubmit(onSubmit)}
                         sx={{ mt: 3 }}
                     >
@@ -112,8 +116,6 @@ export const LoginForm = () => {
                                     label='Email'
                                     autoFocus
                                     {...register('email')}
-                                    error={!!errors.email}
-                                    helperText={errors.email?.message}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -123,10 +125,8 @@ export const LoginForm = () => {
                                     required
                                     type='password'
                                     id='password'
-                                    autoComplete='new-password'
+                                    autoComplete='current-password'
                                     {...register('password')}
-                                    error={!!errors.password}
-                                    helperText={errors.password?.message}
                                 />
                             </Grid>
                         </Grid>

@@ -26,6 +26,8 @@ import { updateUser, updateUserData } from '../../store/authStore.ts';
 import { updateSnackbar } from '../../store/snackbarStore.ts';
 import GlobalSnackbar from '../GlobalSnackbar/GlobalSnackbar.tsx';
 import registrationValidationSchema from './registrationFormScheme.tsx';
+import errorHandler from '../../services/errors.service.ts';
+import { FirebaseError } from 'firebase/app';
 
 export const RegistrationForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -58,48 +60,72 @@ export const RegistrationForm = () => {
 
     const onSubmit: SubmitHandler<IFormInputs> = (data) => {
         setButtonLoading(true);
-        const uniqueEmail = checkUniqueEmail(data.email);
-        const uniqueUsername = checkUniqueUsername(data.username);
-        if (!uniqueEmail) {
-            const error = new Error();
-            error.name = 'auth/username-already-exists';
-            error.message = 'Username has already been taken!';
-            throw error;
-        }
-        if (!uniqueUsername) {
-            const error = new Error();
-            error.name = 'auth/user-already-exists';
-            error.message = 'Username has already been taken!';
-            throw error;
-        }
-        return registerUser(data.email, data.password)
-            .then((credential) => {
-                updateUser(credential.user);
-                return createUser(
-                    data.username,
-                    credential.user.uid,
-                    data.email
-                );
-            })
-            .then(() => {
-                getUserByUsername(data.username).then((user) => {
-                    updateUserData(user.val());
-                });
-            })
-            .then(() => {
-                updateSnackbar('success', 'Registration Complete!', true);
-            })
-            .then(() => {
-                setTimeout(() => {
-                    navigate('/');
-                }, 2000);
+        checkUniqueEmail(data.email)
+            .then((uniqueEmail) => {
+                if (!uniqueEmail) {
+                    throw new FirebaseError(
+                        'auth/email-already-exists',
+                        'Email has already been taken!'
+                    );
+                }
             })
             .catch((error) => {
-                updateSnackbar('error', error.message, true);
-            })
-            .finally(() => {
+                console.log(error.code);
+                const message = errorHandler(error);
+                updateSnackbar('error', message, true);
                 setButtonLoading(false);
-                updateSnackbar('success', 'message', false);
+            });
+        checkUniqueUsername(data.username)
+            .then((uniqueUsername) => {
+                if (!uniqueUsername) {
+                    throw new FirebaseError(
+                        'auth/username-already-exists',
+                        'Username has already been taken!'
+                    );
+                }
+            })
+            .then(() => {
+                return registerUser(data.email, data.password)
+                    .then((credential) => {
+                        updateUser(credential.user);
+                        return createUser(
+                            data.username,
+                            credential.user.uid,
+                            data.email
+                        );
+                    })
+                    .then(() => {
+                        getUserByUsername(data.username).then((user) => {
+                            updateUserData(user.val());
+                        });
+                    })
+                    .then(() => {
+                        updateSnackbar(
+                            'success',
+                            'Registration Complete!',
+                            true
+                        );
+                    })
+                    .then(() => {
+                        setTimeout(() => {
+                            navigate('/');
+                        }, 2000);
+                    })
+                    .catch((error) => {
+                        console.log(error.code);
+                        const message = errorHandler(error);
+                        updateSnackbar('error', message, true);
+                        setButtonLoading(false);
+                    })
+                    .finally(() => {
+                        setButtonLoading(false);
+                    });
+            })
+            .catch((error) => {
+                console.log(error.code);
+                const message = errorHandler(error);
+                updateSnackbar('error', message, true);
+                setButtonLoading(false);
             });
     };
 
