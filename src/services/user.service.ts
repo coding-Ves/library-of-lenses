@@ -13,19 +13,6 @@ import { DICEBEAR_AVATAR_BASE_URL } from '../common/constants.ts';
 import { Roles } from '../common/userEnum.ts';
 import { db } from '../config/firebase.ts';
 
-// interface userData {
-//     uid: string;
-//     username: string;
-//     email: string;
-//     role: Roles;
-//     avatarURL: string;
-//     createdOn: string;
-//     commentsNumber: number;
-//     comments: Array<object> | null;
-//     reviewsNumber: number;
-//     reviews: Array<object> | null;
-// }
-
 export const createUser = (
     username: string,
     uid: string,
@@ -45,7 +32,7 @@ export const getUserByUsername = (username: string): Promise<DataSnapshot> => {
     return get(ref(db, `users/${username}`));
 };
 
-export const getUserData = (uid: string): Promise<DataSnapshot> => {
+export const getUserByUID = (uid: string): Promise<DataSnapshot> => {
     return get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
 };
 
