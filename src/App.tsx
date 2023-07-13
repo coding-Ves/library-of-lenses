@@ -1,15 +1,15 @@
 import { Typography } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
+import { useEffect } from 'react';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { auth } from '../src/config/firebase.ts';
+import GlobalSnackbar from './components/GlobalSnackbar/GlobalSnackbar.tsx';
 import Loader from './components/Loader/Loader.tsx';
 import NavBar from './components/NavBar/NavBar.tsx';
-import useLoadingStore from './store/loadingStore.ts';
-import GlobalSnackbar from './components/GlobalSnackbar/GlobalSnackbar.tsx';
-import { useEffect } from 'react';
+import { getUserByUID } from './services/user.service.ts';
 import useAuthStore, { updateUserData } from './store/authStore.ts';
-import { getUserByUsername, getUserByUID } from './services/user.service.ts';
-import { auth } from '../src/config/firebase.ts';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import useLoadingStore from './store/loadingStore.ts';
 
 // App.tsx is used as a Layout component for react router
 

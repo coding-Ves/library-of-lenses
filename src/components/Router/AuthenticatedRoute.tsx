@@ -8,18 +8,15 @@ interface Props {
 
 const AuthenticatedRoute = ({ children }: Props): JSX.Element => {
     const user = useAuthStore((s) => s.user);
-    const loading = useAuthStore((s) => s.loading);
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!loading) {
-            if (user == null) {
-                navigate('/login');
-            } else if (location.pathname === '/') {
-                navigate('/landing');
-            }
+        if (user == null) {
+            navigate('/login');
+        } else if (location.pathname === '/') {
+            navigate('/landing');
         }
-    }, [user, loading, navigate]);
+    }, [user, navigate]);
 
     return children;
 };

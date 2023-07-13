@@ -7,9 +7,8 @@ interface Props {
 
 const PublicRoute = ({ children }: Props): JSX.Element => {
     const user = useAuthStore((s) => s.user);
-    const loading = useAuthStore((s) => s.loading);
 
-    return !loading && user != null ? <Navigate to={'/'} replace /> : children;
+    return user != null ? <Navigate to={'/'} replace /> : children;
 };
 
 export default PublicRoute;

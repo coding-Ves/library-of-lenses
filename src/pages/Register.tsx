@@ -1,6 +1,6 @@
-import { Typography, Box } from '@mui/material';
-import RegistrationForm from '../components/Register/RegistrationForm.tsx';
+import { Box } from '@mui/material';
 import { LENS_BOARD_IMG_1 } from '../common/constants.ts';
+import RegistrationForm from '../components/Register/RegistrationForm.tsx';
 
 const Register = () => {
     return (
