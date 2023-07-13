@@ -13,16 +13,14 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../services/auth.service.ts';
+import errorHandler from '../../services/errors.service.ts';
 import { getUserByUID } from '../../services/user.service.ts';
 import { updateUser, updateUserData } from '../../store/authStore.ts';
 import { updateSnackbar } from '../../store/snackbarStore.ts';
 import GlobalSnackbar from '../GlobalSnackbar/GlobalSnackbar.tsx';
-import errorHandler from '../../services/errors.service.ts';
-import useAuthStore from '../../store/authStore.ts';
 
 export const LoginForm = () => {
     const [buttonLoading, setButtonLoading] = useState(false);
-    const user = useAuthStore((s) => s.user);
     const navigate = useNavigate();
 
     interface IFormInputs {
@@ -49,7 +47,6 @@ export const LoginForm = () => {
                         );
                     })
                     .catch((error) => {
-                        console.log(error);
                         const message = errorHandler(error);
                         updateSnackbar('error', message, true);
                         setButtonLoading(false);

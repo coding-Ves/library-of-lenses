@@ -7,8 +7,7 @@ import { auth } from '../src/config/firebase.ts';
 import GlobalSnackbar from './components/GlobalSnackbar/GlobalSnackbar.tsx';
 import Loader from './components/Loader/Loader.tsx';
 import NavBar from './components/NavBar/NavBar.tsx';
-import { getUserByUID } from './services/user.service.ts';
-import useAuthStore, { updateUserData } from './store/authStore.ts';
+
 import useLoadingStore from './store/loadingStore.ts';
 
 // App.tsx is used as a Layout component for react router
@@ -16,7 +15,6 @@ import useLoadingStore from './store/loadingStore.ts';
 const App = () => {
     const loading = useLoadingStore((s) => s.loading);
     const [user] = useAuthState(auth);
-    const userData = useAuthStore((s) => s.userData);
 
     useEffect(() => {
         if (user === null) {

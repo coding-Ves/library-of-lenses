@@ -15,6 +15,7 @@ import { updateSnackbar } from '../../store/snackbarStore.ts';
 
 const NavMenu = () => {
     const user = useAuthStore((s) => s.user);
+
     const userData = useAuthStore((s) => s.userData);
 
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -87,6 +88,15 @@ const NavMenu = () => {
                     >
                         Reviews
                     </MenuItem>
+                    {userData?.role === 'admin' ? (
+                        <MenuItem
+                            sx={{ width: '150px' }}
+                            component={Link}
+                            to={'/create-review'}
+                        >
+                            Create Review
+                        </MenuItem>
+                    ) : null}
                 </Menu>
 
                 {user ? (

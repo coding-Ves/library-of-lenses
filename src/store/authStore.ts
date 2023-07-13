@@ -18,28 +18,18 @@ type UserData = {
 interface useAuthType {
     user: FirebaseUser | null;
     userData: UserData | null;
-    userRole: 'unauthorized' | Roles.USER | Roles.BANNED | Roles.ADMIN;
     setUser: (user: FirebaseUser | null) => void;
     setUserData: (setUserData: UserData | null) => void;
-    setUserRole: (
-        userRole: 'unauthorized' | Roles.USER | Roles.BANNED | Roles.ADMIN
-    ) => void;
 }
 
 const useAuthStore = create<useAuthType>((set) => ({
     user: null,
     userData: <UserData | null>null,
-    userRole: 'unauthorized',
     setUser: (user: FirebaseUser | null) => {
         set({ user });
     },
     setUserData: (userData: UserData | null) => {
         set({ userData });
-    },
-    setUserRole: (
-        userRole: 'unauthorized' | Roles.USER | Roles.BANNED | Roles.ADMIN
-    ) => {
-        set({ userRole });
     },
 }));
 
