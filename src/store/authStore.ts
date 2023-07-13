@@ -1,40 +1,59 @@
-import { auth } from '../config/firebase.ts';
-import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
+import { type User as FirebaseUser } from 'firebase/auth';
 import { create } from 'zustand';
 import { Roles } from '../common/userEnum.ts';
 
+type UserData = {
+    uid: string;
+    username: string;
+    email: string;
+    role: Roles;
+    avatarURL: string;
+    createdOn: string;
+    commentsNumber?: number;
+    comments?: Array<object> | null;
+    reviewsNumber?: number;
+    reviews?: Array<object> | null;
+};
+
 interface useAuthType {
     user: FirebaseUser | null;
+    userData: UserData | null;
     userRole: 'unauthorized' | Roles.USER | Roles.BANNED | Roles.ADMIN;
-    loading: boolean;
-    setUserData: (user: FirebaseUser | null) => void;
-    setLoading: (loading: boolean) => void;
+    setUser: (user: FirebaseUser | null) => void;
+    setUserData: (setUserData: UserData | null) => void;
+    setUserRole: (
+        userRole: 'unauthorized' | Roles.USER | Roles.BANNED | Roles.ADMIN
+    ) => void;
 }
 
 const useAuthStore = create<useAuthType>((set) => ({
     user: null,
-    loading: true,
+    userData: <UserData | null>null,
     userRole: 'unauthorized',
-    setUserData: (user: FirebaseUser | null) => {
+    setUser: (user: FirebaseUser | null) => {
         set({ user });
     },
-    setLoading: (loading: boolean) => {
-        set({ loading });
+    setUserData: (userData: UserData | null) => {
+        set({ userData });
+    },
+    setUserRole: (
+        userRole: 'unauthorized' | Roles.USER | Roles.BANNED | Roles.ADMIN
+    ) => {
+        set({ userRole });
     },
 }));
 
-onAuthStateChanged(auth, (user) => {
-    if (user != null) {
-        useAuthStore.getState().setUserData(user);
-        useAuthStore.getState().setLoading(false);
-    } else {
-        useAuthStore.getState().setUserData(null);
-        useAuthStore.getState().setLoading(false);
-    }
-});
+export const updateUser = (user: FirebaseUser | null) => {
+    useAuthStore.getState().setUser(user);
+};
 
-export const updateLoading = (loading: boolean) => {
-    useAuthStore.getState().setLoading(loading);
+export const updateUserData = (user: UserData) => {
+    useAuthStore.getState().setUserData(user);
+};
+
+export const resetUser = () => {
+    useAuthStore.getState().setUserData(null);
+    useAuthStore.getState().setUser(null);
 };
 
 export default useAuthStore;
