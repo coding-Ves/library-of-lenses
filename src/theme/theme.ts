@@ -68,7 +68,24 @@ export const theme = createTheme({
                 },
             },
         },
+        MuiRating: {
+            styleOverrides: {
+                iconFilled: {
+                    color: '#90e0ef',
+                },
+                iconHover: {
+                    color: 'primary.light',
+                },
+                iconEmpty: {
+                    color: 'paper',
+                },
+                iconFocus: {
+                    color: '#00b4d8',
+                },
+            },
+        },
     },
+
     shape: {
         borderRadius: 10,
     },
