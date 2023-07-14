@@ -7,6 +7,7 @@ export const FIREBASE_PROJECT_ID = 'library-of-lenses';
 export const FIREBASE_STORAGE_BUCKET = 'library-of-lenses.appspot.com';
 export const FIREBASE_MESSAGING_SENDER_ID = '833994462337';
 export const FIREBASE_APP_ID = '1:833994462337:web:1d8a70c0350b563fda2980';
+export const FLICKR_API_KEY = '90a7607572936b024247b50a87990e2b';
 
 // Dicebear HTML API
 export const DICEBEAR_AVATAR_BASE_URL =
