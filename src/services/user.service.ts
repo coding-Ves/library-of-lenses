@@ -48,3 +48,12 @@ export const updateUserAvatar = (
         [`/users/${username}/avatarURL`]: url,
     });
 };
+
+export const updateUserReviews = (
+    username: string | undefined,
+    reviewID: string | null
+): Promise<void> => {
+    return update(ref(db), {
+        [`/users/${username}/reviews/${reviewID}`]: true,
+    });
+};
