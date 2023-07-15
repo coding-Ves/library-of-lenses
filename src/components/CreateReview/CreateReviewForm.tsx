@@ -1,36 +1,42 @@
+import { Camera } from '@mui/icons-material';
 import {
-    Avatar,
     Box,
     Button,
     CircularProgress,
-    Container,
     Grid,
-    Link as MuiLink,
+    InputAdornment,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Rating,
     Select,
+    SelectChangeEvent,
+    Stack,
+    Switch,
     TextField,
     Typography,
-    MenuItem,
-    InputLabel,
-    SelectChangeEvent,
-    Rating,
-    Switch,
-    InputAdornment,
 } from '@mui/material';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import { loginUser } from '../../services/auth.service.ts';
+import { useNavigate } from 'react-router-dom';
+import { LensMounts } from '../../common/lensMountEnum.ts';
 import errorHandler from '../../services/errors.service.ts';
-import { getUserByUID } from '../../services/user.service.ts';
-import { updateUser, updateUserData } from '../../store/authStore.ts';
+import {
+    URLAlbumHandler,
+    URLPhotoHandler,
+} from '../../services/flickr.service.ts';
+import { addReview } from '../../services/reviews.service.ts';
+import useAuthStore from '../../store/authStore.ts';
 import { updateSnackbar } from '../../store/snackbarStore.ts';
 import GlobalSnackbar from '../GlobalSnackbar/GlobalSnackbar.tsx';
-import { LensMounts } from '../../common/lensMountEnum.ts';
-import { Camera } from '@mui/icons-material';
 
 export const CreateReviewForm = () => {
     const [buttonLoading, setButtonLoading] = useState(false);
     const navigate = useNavigate();
+    const { register, handleSubmit } = useForm<FormData>();
+    const [lensMount, setLensMount] = useState('');
+    const [rating, setRating] = useState(0);
+    const userData = useAuthStore((s) => s.userData);
 
     interface IFormInputs {
         lensName: string;
@@ -70,14 +76,14 @@ export const CreateReviewForm = () => {
         galleryURL: string;
     };
 
-    const { register, handleSubmit } = useForm<FormData>();
-
-    const [lensMount, setLensMount] = useState('');
-    const [rating, setRating] = useState(0);
-
-    const handleRatingChange = (event: any) => {
-        setRating(event.target.value);
-        register('rating', { value: event.target.value });
+    const handleRatingChange = (
+        event: React.SyntheticEvent<Element, Event>,
+        value: number | null
+    ) => {
+        if (value !== null) {
+            setRating(value);
+            register('rating', { value });
+        }
     };
 
     const handleSelectChange = (event: SelectChangeEvent) => {
@@ -85,12 +91,37 @@ export const CreateReviewForm = () => {
     };
 
     const onSubmit: SubmitHandler<IFormInputs> = (data) => {
-        console.log(data);
-        // setButtonLoading(true);
-
-        // const message = errorHandler(error);
-        //     updateSnackbar('error', message, true);
-        //     setButtonLoading(false);
+        setButtonLoading(true);
+        const imageURL = URLPhotoHandler(data.lensImageURL);
+        const galleryURL = URLAlbumHandler(data.galleryURL);
+        addReview(
+            data.lensName,
+            imageURL,
+            data.lensMount,
+            data.prime,
+            data.focalLength,
+            data.minAperture,
+            data.maxAperture,
+            data.minFocusDistance,
+            data.filterSize,
+            data.weight,
+            data.rating,
+            data.reviewStory,
+            data.reviewHandling,
+            data.reviewOptical,
+            data.reviewVerdict,
+            galleryURL,
+            userData?.username
+        )
+            .then(() => {
+                updateSnackbar('success', 'Review created!', true);
+                setButtonLoading(false);
+            })
+            .catch((error) => {
+                const message = errorHandler(error);
+                updateSnackbar('error', message, true);
+                setButtonLoading(false);
+            });
     };
 
     return (
@@ -101,177 +132,231 @@ export const CreateReviewForm = () => {
                 onSubmit={handleSubmit(onSubmit)}
                 sx={{ mt: 3 }}
             >
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id='lensImageURL'
-                            label='Lens Flickr Photo URL'
-                            autoFocus
-                            {...register('lensImageURL')}
-                        />
+                <Typography
+                    variant='h4'
+                    component={Paper}
+                    p={1}
+                    sx={{
+                        margin: 'auto',
+                        mb: 1,
+                        ml: '30vw',
+                        mr: '30vw',
+                        alignContent: 'center',
+                    }}
+                    align='center'
+                >
+                    Create Review
+                </Typography>
+                <Paper
+                    component={Stack}
+                    direction='row'
+                    useFlexGap
+                    gap={3}
+                    flexWrap='wrap'
+                    justifyContent='space-evenly'
+                    p={5}
+                    sx={{
+                        width: '60%',
+                        margin: 'auto',
+                        mb: 1,
+                        alignContent: 'center',
+                    }}
+                >
+                    <Grid
+                        container
+                        spacing={2}
+                        sx={{
+                            width: '50vh',
+                            display: 'flex',
+                            alignContent: 'start',
+                        }}
+                    >
+                        <Grid item xs={12}></Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id='lensImageURL'
+                                label='Lens Flickr Photo URL'
+                                autoFocus
+                                {...register('lensImageURL')}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id='galleryURL'
+                                label='Flickr Gallery URL'
+                                autoFocus
+                                {...register('galleryURL')}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id='lensName'
+                                label='Lens Name'
+                                autoFocus
+                                {...register('lensName')}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <InputLabel id='prime'>Prime lens</InputLabel>
+                            <Switch
+                                id='prime'
+                                autoFocus
+                                {...register('prime')}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <InputLabel id='lensMount'>Lens Mount</InputLabel>
+                            <Select
+                                value={lensMount}
+                                required
+                                fullWidth
+                                id='lensMount'
+                                label='Lens Mount'
+                                autoFocus
+                                {...register('lensMount')}
+                                onChange={handleSelectChange}
+                            >
+                                {Object.values(LensMounts).map((mount) => (
+                                    <MenuItem key={mount} value={mount}>
+                                        {[mount]}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id='focalLength'
+                                label='Focal length'
+                                autoFocus
+                                {...register('focalLength')}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            mm
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id='galleryURL'
-                            label='Flickr Gallery URL'
-                            autoFocus
-                            {...register('galleryURL')}
-                        />
+                    <Grid container spacing={2} sx={{ width: '50vh' }}>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id='minAperture'
+                                label='Min aperture'
+                                autoFocus
+                                {...register('minAperture')}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position='start'>
+                                            ƒ
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id='maxAperture'
+                                label='Max aperture'
+                                autoFocus
+                                {...register('maxAperture')}
+                                InputProps={{
+                                    startAdornment: (
+                                        <InputAdornment position='start'>
+                                            ƒ
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id='minFocusDistance'
+                                label='Min focus distance'
+                                autoFocus
+                                {...register('minFocusDistance')}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            meters
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id='filterSize'
+                                label='Filter size'
+                                autoFocus
+                                {...register('filterSize')}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            mm
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                fullWidth
+                                id='weight'
+                                label='Weight'
+                                autoFocus
+                                {...register('weight')}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position='end'>
+                                            grams
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <InputLabel id='prime'>Overall Rating</InputLabel>
+                            <Rating
+                                id='rating'
+                                autoFocus
+                                onChange={handleRatingChange}
+                                getLabelText={(value: number) =>
+                                    `${value} Camera${value !== 1 ? 's' : ''}`
+                                }
+                                precision={0.5}
+                                icon={<Camera fontSize='large' />}
+                                emptyIcon={<Camera fontSize='large' />}
+                            />
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id='lensName'
-                            label='Lens Name'
-                            autoFocus
-                            {...register('lensName')}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputLabel id='prime'>Prime lens</InputLabel>
-                        <Switch id='prime' autoFocus {...register('prime')} />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputLabel id='lensMount'>Lens Mount</InputLabel>
-                        <Select
-                            value={lensMount}
-                            required
-                            fullWidth
-                            id='lensMount'
-                            label='Lens Mount'
-                            autoFocus
-                            {...register('lensMount')}
-                            onChange={handleSelectChange}
-                            sx={{ width: '50%' }}
-                        >
-                            {Object.values(LensMounts).map((mount) => (
-                                <MenuItem key={mount} value={mount}>
-                                    {[mount]}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id='focalLength'
-                            label='Focal length'
-                            autoFocus
-                            {...register('focalLength')}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position='end'>
-                                        mm
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id='minAperture'
-                            label='Min aperture'
-                            autoFocus
-                            {...register('minAperture')}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position='start'>
-                                        ƒ
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id='maxAperture'
-                            label='Max aperture'
-                            autoFocus
-                            {...register('maxAperture')}
-                            InputProps={{
-                                startAdornment: (
-                                    <InputAdornment position='start'>
-                                        ƒ
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id='minFocusDistance'
-                            label='Min focus distance'
-                            autoFocus
-                            {...register('minFocusDistance')}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position='end'>
-                                        meters
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id='filterSize'
-                            label='Filter size'
-                            autoFocus
-                            {...register('filterSize')}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position='end'>
-                                        mm
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            fullWidth
-                            id='weight'
-                            label='Weight'
-                            autoFocus
-                            {...register('weight')}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position='end'>
-                                        grams
-                                    </InputAdornment>
-                                ),
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <InputLabel id='prime'>Overall Rating</InputLabel>
-                        <Rating
-                            id='rating'
-                            autoFocus
-                            onChange={handleRatingChange}
-                            getLabelText={(value: number) =>
-                                `${value} Camera${value !== 1 ? 's' : ''}`
-                            }
-                            precision={0.5}
-                            icon={<Camera fontSize='large' />}
-                            emptyIcon={<Camera fontSize='large' />}
-                        />
-                    </Grid>
+                </Paper>
+                <Paper
+                    component={Grid}
+                    container
+                    spacing={2}
+                    p={4}
+                    sx={{ width: '60%', margin: 'auto' }}
+                >
                     <Grid item xs={12}>
                         <TextField
                             required
@@ -320,23 +405,26 @@ export const CreateReviewForm = () => {
                             {...register('reviewVerdict')}
                         />
                     </Grid>
-                </Grid>
-                <Button
-                    type='submit'
-                    variant='contained'
-                    disabled={buttonLoading}
-                    sx={{
-                        mt: 3,
-                        mb: 2,
-                        height: '40px',
-                    }}
-                >
-                    {!buttonLoading ? (
-                        'Create Review'
-                    ) : (
-                        <CircularProgress color='secondary' size={20} />
-                    )}
-                </Button>
+
+                    <Button
+                        type='submit'
+                        variant='contained'
+                        disabled={buttonLoading}
+                        sx={{
+                            mt: 3,
+                            mb: 2,
+                            ml: 'auto',
+                            mr: 'auto',
+                            width: '40%',
+                        }}
+                    >
+                        {!buttonLoading ? (
+                            'Create Review'
+                        ) : (
+                            <CircularProgress color='secondary' size={20} />
+                        )}
+                    </Button>
+                </Paper>
             </Box>
         </>
     );
