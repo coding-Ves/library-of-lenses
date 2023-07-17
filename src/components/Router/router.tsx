@@ -2,7 +2,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import Admin from '../../pages/Admin.tsx';
 import CreateReview from '../../pages/CreateReview.tsx';
 import Home from '../../pages/Home.tsx';
-import Landing from '../../pages/Landing.tsx';
+import Welcome from '../../pages/Welcome.tsx';
 import Login from '../../pages/Login.tsx';
 import MyAccount from '../../pages/MyAccount.tsx';
 import NotFound from '../../pages/NotFound.tsx';
@@ -18,32 +18,12 @@ import App from '../../App.tsx';
 
 const router = createBrowserRouter([
     {
-        path: '/landing',
-        element: (
-            <PublicRoute>
-                <Landing />
-            </PublicRoute>
-        ),
-    },
-    {
-        path: '/login',
-        element: (
-            <PublicRoute>
-                <Login />
-            </PublicRoute>
-        ),
-    },
-    {
-        path: '/register',
-        element: (
-            <PublicRoute>
-                <Register />
-            </PublicRoute>
-        ),
-    },
-    {
         path: '/',
-        element: <App />,
+        element: (
+            <AuthenticatedRoute>
+                <App />
+            </AuthenticatedRoute>
+        ),
         children: [
             { path: 'home', element: <Home /> },
             {
@@ -84,11 +64,43 @@ const router = createBrowserRouter([
                     </AdminRoute>
                 ),
                 children: [
-                    { path: 'users', element: <Users /> },
+                    {
+                        path: 'users',
+                        element: (
+                            <AdminRoute>
+                                <Users />
+                            </AdminRoute>
+                        ),
+                    },
                     { path: 'stats', element: <Stats /> },
                 ],
             },
         ],
+    },
+    {
+        path: '/welcome',
+        element: (
+            <PublicRoute>
+                <Welcome />
+            </PublicRoute>
+        ),
+    },
+
+    {
+        path: '/login',
+        element: (
+            <PublicRoute>
+                <Login />
+            </PublicRoute>
+        ),
+    },
+    {
+        path: '/register',
+        element: (
+            <PublicRoute>
+                <Register />
+            </PublicRoute>
+        ),
     },
 
     {

@@ -11,10 +11,10 @@ const AuthenticatedRoute = ({ children }: Props): JSX.Element => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (user == null) {
-            navigate('/login');
+        if (user === null) {
+            navigate('/welcome');
         } else if (location.pathname === '/') {
-            navigate('/landing');
+            navigate('/');
         }
     }, [user, navigate]);
 

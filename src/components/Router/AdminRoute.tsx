@@ -8,16 +8,17 @@ interface Props {
 }
 
 const AdminRoute = ({ children }: Props): JSX.Element => {
-    const userData = useAuthStore((s) => s.userData);
+    const role = useAuthStore((s) => s.userData?.role);
+
     const navigate = useNavigate();
 
+    console.table(role);
+
     useEffect(() => {
-        if (userData?.role !== Roles.ADMIN) {
+        if (role !== Roles.ADMIN) {
             navigate('/not-found');
-        } else if (location.pathname === '/') {
-            navigate('/admin');
         }
-    }, [userData, navigate]);
+    }, [role]);
 
     return children;
 };

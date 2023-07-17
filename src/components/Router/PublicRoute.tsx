@@ -1,5 +1,6 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/authStore.ts';
-import { Navigate } from 'react-router-dom';
 
 interface Props {
     children: JSX.Element;
@@ -7,8 +8,15 @@ interface Props {
 
 const PublicRoute = ({ children }: Props): JSX.Element => {
     const user = useAuthStore((s) => s.user);
+    const navigate = useNavigate();
 
-    return user != null ? <Navigate to={'/'} replace /> : children;
+    useEffect(() => {
+        if (user !== null) {
+            navigate('/');
+        }
+    }, [user]);
+
+    return children;
 };
 
 export default PublicRoute;
