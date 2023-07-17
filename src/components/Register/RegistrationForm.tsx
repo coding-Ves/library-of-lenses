@@ -13,21 +13,23 @@ import {
     TextField,
     Typography,
 } from '@mui/material';
+import { FirebaseError } from 'firebase/app';
+import { updateProfile } from 'firebase/auth';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+import { DICEBEAR_AVATAR_BASE_URL } from '../../common/constants.ts';
+import { auth } from '../../config/firebase.ts';
 import {
     checkUniqueEmail,
     checkUniqueUsername,
     registerUser,
 } from '../../services/auth.service.ts';
-import { createUser, getUserByUsername } from '../../services/user.service.ts';
-import { updateUser, updateUserData } from '../../store/authStore.ts';
+import errorHandler from '../../services/errors.service.ts';
+import { createUser } from '../../services/user.service.ts';
 import { updateSnackbar } from '../../store/snackbarStore.ts';
 import GlobalSnackbar from '../GlobalSnackbar/GlobalSnackbar.tsx';
 import registrationValidationSchema from './registrationFormScheme.tsx';
-import errorHandler from '../../services/errors.service.ts';
-import { FirebaseError } from 'firebase/app';
 
 export const RegistrationForm = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -36,19 +38,12 @@ export const RegistrationForm = () => {
 
     const navigate = useNavigate();
 
-    interface IFormInputs {
+    interface FormData {
         username: string;
         email: string;
         password: string;
-        confirmPassword: string;
+        confirmPassword: string | undefined;
     }
-
-    type FormData = {
-        username: string;
-        email: string;
-        password: string;
-        confirmPassword: string;
-    };
 
     const {
         register,
@@ -58,7 +53,7 @@ export const RegistrationForm = () => {
         resolver: yupResolver(registrationValidationSchema),
     });
 
-    const onSubmit: SubmitHandler<IFormInputs> = (data) => {
+    const onSubmit: SubmitHandler<FormData> = (data) => {
         setButtonLoading(true);
         checkUniqueEmail(data.email)
             .then((uniqueEmail) => {
@@ -87,17 +82,21 @@ export const RegistrationForm = () => {
             .then(() => {
                 return registerUser(data.email, data.password)
                     .then((credential) => {
-                        updateUser(credential.user);
+                        if (auth.currentUser != null) {
+                            updateProfile(auth.currentUser, {
+                                displayName: data.username,
+                                photoURL: `${DICEBEAR_AVATAR_BASE_URL}${data.username}}`,
+                            }).catch((error: FirebaseError) => {
+                                const message = errorHandler(error);
+                                updateSnackbar('error', message, true);
+                                setButtonLoading(false);
+                            });
+                        }
                         return createUser(
                             data.username,
                             credential.user.uid,
                             data.email
                         );
-                    })
-                    .then(() => {
-                        getUserByUsername(data.username).then((user) => {
-                            updateUserData(user.val());
-                        });
                     })
                     .then(() => {
                         updateSnackbar(
@@ -112,7 +111,6 @@ export const RegistrationForm = () => {
                         }, 2000);
                     })
                     .catch((error) => {
-                        console.log(error.code);
                         const message = errorHandler(error);
                         updateSnackbar('error', message, true);
                         setButtonLoading(false);

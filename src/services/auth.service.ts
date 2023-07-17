@@ -6,6 +6,7 @@ import {
 } from 'firebase/auth';
 import { equalTo, get, orderByChild, query, ref } from 'firebase/database';
 import { auth, db } from '../config/firebase.ts';
+import { resetUser } from '../store/authStore.ts';
 
 export const registerUser = (
     email: string,
@@ -22,6 +23,7 @@ export const loginUser = (
 };
 
 export const logoutUser = () => {
+    resetUser();
     return signOut(auth);
 };
 

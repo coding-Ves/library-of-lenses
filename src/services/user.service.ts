@@ -8,6 +8,7 @@ import {
     update,
     type DataSnapshot,
     type Query,
+    type DatabaseReference,
 } from 'firebase/database';
 import { DICEBEAR_AVATAR_BASE_URL } from '../common/constants.ts';
 import { Roles } from '../common/userEnum.ts';
@@ -29,11 +30,15 @@ export const createUser = (
 };
 
 export const getUserByUsername = (username: string): Promise<DataSnapshot> => {
-    return get(ref(db, `users/${username}`));
+    return get(ref(db, `/users/${username}`));
 };
 
 export const getUserByUID = (uid: string): Promise<DataSnapshot> => {
     return get(query(ref(db, 'users'), orderByChild('uid'), equalTo(uid)));
+};
+
+export const getUserReference = (username: string): DatabaseReference => {
+    return ref(db, `users/${username}`);
 };
 
 export const getUsers = (): Query => {

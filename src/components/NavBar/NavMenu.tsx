@@ -15,16 +15,18 @@ import { updateSnackbar } from '../../store/snackbarStore.ts';
 
 const NavMenu = () => {
     const user = useAuthStore((s) => s.user);
-
     const userData = useAuthStore((s) => s.userData);
-
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const handleLogout = () => {
-        resetUser();
-        logoutUser();
-        updateSnackbar('success', 'Logged out. See you later!', true);
+        logoutUser()
+            .then(() => {
+                resetUser();
+            })
+            .catch((error) => {
+                updateSnackbar('error', error, true);
+            });
     };
 
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {

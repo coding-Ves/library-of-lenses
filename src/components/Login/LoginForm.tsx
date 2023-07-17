@@ -14,19 +14,12 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../services/auth.service.ts';
 import errorHandler from '../../services/errors.service.ts';
-import { getUserByUID } from '../../services/user.service.ts';
-import { updateUser, updateUserData } from '../../store/authStore.ts';
 import { updateSnackbar } from '../../store/snackbarStore.ts';
 import GlobalSnackbar from '../GlobalSnackbar/GlobalSnackbar.tsx';
 
 export const LoginForm = () => {
     const [buttonLoading, setButtonLoading] = useState(false);
     const navigate = useNavigate();
-
-    interface IFormInputs {
-        email: string;
-        password: string;
-    }
 
     type FormData = {
         email: string;
@@ -35,31 +28,18 @@ export const LoginForm = () => {
 
     const { register, handleSubmit } = useForm<FormData>();
 
-    const onSubmit: SubmitHandler<IFormInputs> = (data) => {
+    const onSubmit: SubmitHandler<FormData> = (data) => {
         setButtonLoading(true);
         loginUser(data.email, data.password)
-            .then((credential) => {
-                updateUser(credential.user);
-                getUserByUID(credential.user.uid)
-                    .then((snapshot) => {
-                        updateUserData(
-                            snapshot.val()[Object.keys(snapshot.val())[0]]
-                        );
-                    })
-                    .catch((error) => {
-                        const message = errorHandler(error);
-                        updateSnackbar('error', message, true);
-                        setButtonLoading(false);
-                    });
-            })
             .then(() => {
                 setTimeout(() => {
                     navigate('/');
                     updateSnackbar('success', 'message', false);
-                }, 5000);
+                }, 1000);
                 updateSnackbar('success', 'Login Successful!', true);
             })
             .catch((error) => {
+                alert(error);
                 const message = errorHandler(error);
                 updateSnackbar('error', message, true);
                 setButtonLoading(false);
