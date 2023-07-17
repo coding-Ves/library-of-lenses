@@ -1,12 +1,13 @@
-import { type User as FirebaseUser } from 'firebase/auth';
+import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
 import { create } from 'zustand';
+import { auth } from '../config/firebase.ts';
 import { Roles } from '../common/userEnum.ts';
 
 type UserData = {
     uid: string;
     username: string;
     email: string;
-    role: Roles;
+    role: Roles.USER | Roles.ADMIN | Roles.BANNED;
     avatarURL: string;
     createdOn: string;
     commentsNumber?: number;
@@ -18,18 +19,24 @@ type UserData = {
 interface useAuthType {
     user: FirebaseUser | null;
     userData: UserData | null;
+    loading: boolean;
     setUser: (user: FirebaseUser | null) => void;
-    setUserData: (setUserData: UserData | null) => void;
+    setUserData: (user: UserData | null) => void;
+    setLoading: (loading: boolean) => void;
 }
 
 const useAuthStore = create<useAuthType>((set) => ({
     user: null,
-    userData: <UserData | null>null,
+    userData: null,
+    loading: true,
     setUser: (user: FirebaseUser | null) => {
         set({ user });
     },
     setUserData: (userData: UserData | null) => {
         set({ userData });
+    },
+    setLoading: (loading: boolean) => {
+        set({ loading });
     },
 }));
 
@@ -37,13 +44,13 @@ export const updateUser = (user: FirebaseUser | null) => {
     useAuthStore.getState().setUser(user);
 };
 
-export const updateUserData = (user: UserData) => {
-    useAuthStore.getState().setUserData(user);
+export const updateUserData = (userData: UserData | null) => {
+    useAuthStore.getState().setUserData(userData);
 };
 
 export const resetUser = () => {
-    useAuthStore.getState().setUserData(null);
     useAuthStore.getState().setUser(null);
+    useAuthStore.getState().setUserData(null);
 };
 
 export default useAuthStore;
