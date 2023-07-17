@@ -1,15 +1,7 @@
-import {
-    equalTo,
-    get,
-    orderByChild,
-    push,
-    query,
-    ref,
-    update,
-} from 'firebase/database';
+import { get, orderByChild, push, query, ref, update } from 'firebase/database';
+import { LensMounts } from '../common/lensMountEnum.ts';
 import { db } from '../config/firebase.ts';
 import { updateUserReviews } from './user.service.ts';
-import { LensMounts } from '../common/lensMountEnum.ts';
 
 export const addReview = (
     lensName: string,
