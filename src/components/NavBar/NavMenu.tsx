@@ -45,7 +45,7 @@ const NavMenu = () => {
     };
 
     return (
-        <AppBar position='static' sx={{ height: '60px' }} color='primary'>
+        <AppBar position='static' sx={{ height: '60px' }} color='secondary'>
             <Toolbar
                 sx={{
                     display: 'flex',
