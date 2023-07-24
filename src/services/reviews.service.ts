@@ -1,4 +1,13 @@
-import { get, orderByChild, push, query, ref, update } from 'firebase/database';
+import {
+    DataSnapshot,
+    DatabaseReference,
+    get,
+    orderByChild,
+    push,
+    query,
+    ref,
+    update,
+} from 'firebase/database';
 import { LensMounts } from '../common/lensMountEnum.ts';
 import { db } from '../config/firebase.ts';
 import { updateUserReviews } from './user.service.ts';
@@ -61,6 +70,25 @@ export const getReviewByID = (reviewID: string) => {
     });
 };
 
-export const getReviews = () => {
-    return query(ref(db, 'reviews'), orderByChild('createdOn'));
+const fromReviewsDocument = (snapshot: DataSnapshot) => {
+    const ReviewsDocument = snapshot.val();
+
+    return Object.keys(ReviewsDocument).map((key) => {
+        const review = ReviewsDocument[key];
+
+        return {
+            ...review,
+            reviewID: key,
+            createdOn: new Date(review.createdOn),
+        };
+    });
+};
+
+export const getAllReviews = () => {
+    return get(ref(db, 'reviews')).then((snapshot) => {
+        if (!snapshot.exists()) {
+            return [];
+        }
+        return fromReviewsDocument(snapshot);
+    });
 };
