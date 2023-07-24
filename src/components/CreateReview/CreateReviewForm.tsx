@@ -33,7 +33,7 @@ import GlobalSnackbar from '../GlobalSnackbar/GlobalSnackbar.tsx';
 export const CreateReviewForm = () => {
     const [buttonLoading, setButtonLoading] = useState(false);
     const navigate = useNavigate();
-    const { register, handleSubmit } = useForm<FormData>();
+    const { register, handleSubmit } = useForm<LensReview>();
     const [lensMount, setLensMount] = useState('');
     const [rating, setRating] = useState(0);
     const userData = useAuthStore((s) => s.userData);
@@ -57,7 +57,7 @@ export const CreateReviewForm = () => {
         galleryURL: string;
     }
 
-    type FormData = {
+    type LensReview = {
         lensName: string;
         lensImageURL: string;
         lensMount: LensMounts;
@@ -335,7 +335,9 @@ export const CreateReviewForm = () => {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <InputLabel id='prime'>Overall Rating</InputLabel>
+                            <InputLabel required id='rating'>
+                                Overall Rating
+                            </InputLabel>
                             <Rating
                                 id='rating'
                                 autoFocus

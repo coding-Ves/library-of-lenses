@@ -39,7 +39,6 @@ export const LoginForm = () => {
                 updateSnackbar('success', 'Login Successful!', true);
             })
             .catch((error) => {
-                alert(error);
                 const message = errorHandler(error);
                 updateSnackbar('error', message, true);
                 setButtonLoading(false);
