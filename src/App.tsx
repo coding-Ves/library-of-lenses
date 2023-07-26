@@ -41,9 +41,8 @@ const App = () => {
         <>
             {loading && <Loader />}
             <NavBar />
-            <Typography variant='h1'>App.js outlet</Typography>
+            <Typography variant='h4'>App.js outlet</Typography>
             <Outlet />
-
             <GlobalSnackbar />
         </>
     );

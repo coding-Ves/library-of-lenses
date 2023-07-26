@@ -18,6 +18,6 @@ export type LensReview = {
     reviewOptical: string;
     reviewVerdict: string;
     galleryURL: string;
-    createdOn: number;
+    createdOn: Date;
     reviewID: string;
 };
