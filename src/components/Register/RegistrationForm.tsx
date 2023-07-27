@@ -144,7 +144,7 @@ export const RegistrationForm = () => {
                 >
                     <Link to={'/'}>
                         <Avatar
-                            src='/public/white_logo_transparent.png'
+                            src='/white_logo_transparent.png'
                             alt='logo image'
                             sx={{
                                 width: '70px',
