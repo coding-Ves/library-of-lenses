@@ -29,16 +29,14 @@ const router = createBrowserRouter([
             {
                 path: 'reviews',
                 element: <Reviews />,
-                children: [
-                    {
-                        path: ':reviewName',
-                        element: (
-                            <AuthenticatedRoute>
-                                <SingleReview />
-                            </AuthenticatedRoute>
-                        ),
-                    },
-                ],
+            },
+            {
+                path: 'reviews/:lensName',
+                element: (
+                    <AuthenticatedRoute>
+                        <SingleReview />
+                    </AuthenticatedRoute>
+                ),
             },
             {
                 path: 'create-review',

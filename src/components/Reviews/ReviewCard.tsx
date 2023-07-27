@@ -9,11 +9,11 @@ import {
     Divider,
     Rating,
     Stack,
-    Typography
+    Typography,
 } from '@mui/material';
 import { fetchPhotoById } from '../../services/flickr.service.ts';
 import { LensReview } from '../../types/types.ts';
-
+import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 interface ReviewCardProps {
@@ -22,6 +22,7 @@ interface ReviewCardProps {
 
 const ReviewCard: React.FC<ReviewCardProps> = ({ lensReview }) => {
     const [lensImage, setLensImage] = useState<string>('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         fetchPhotoById(lensReview.lensImageURL)
@@ -123,7 +124,13 @@ const ReviewCard: React.FC<ReviewCardProps> = ({ lensReview }) => {
                     fullWidth
                     sx={{ ml: 'auto', mr: '5px' }}
                 >
-                    Full Review
+                    <Link
+                        style={{ textDecoration: 'none', color: 'inherit' }}
+                        to={`/reviews/${lensReview.lensName}`}
+                        state={lensReview}
+                    >
+                        Full Review
+                    </Link>
                 </Button>
             </CardActions>
             <Stack m={1} direction='row' justifyContent='space-between'>

@@ -1,9 +1,14 @@
 import { Typography } from '@mui/material';
+import { useLocation, useParams } from 'react-router-dom';
 
 const SingleReview = () => {
+    const location = useLocation();
+    const lensReview = location.state;
+
     return (
         <>
-            <Typography>Single Review</Typography>
+            {console.log(lensReview)}
+            <Typography>{lensReview.lensName}</Typography>
         </>
     );
 };
