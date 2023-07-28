@@ -21,3 +21,15 @@ export type LensReview = {
     createdOn: Date;
     reviewID: string;
 };
+
+export type galleryItem = {
+    farm: number;
+    id: string;
+    isfamily: boolean;
+    isfriend: boolean;
+    isprimary: boolean;
+    ispublic: number;
+    secret: string;
+    server: string;
+    title: string;
+};
