@@ -33,13 +33,8 @@ const App = () => {
         }
     }, [user, currentUser]);
 
-    if (isLoading) {
-        return <Loader />;
-    }
-
     return (
         <>
-            {loading && <Loader />}
             <NavBar />
             <Typography variant='h4'>App.js outlet</Typography>
             <Outlet />
