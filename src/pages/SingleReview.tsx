@@ -53,7 +53,6 @@ const SingleReview = () => {
                     component={Paper}
                     sx={{ width: '50%', ml: 'auto', mr: 'auto', mt: 3 }}
                 >
-                    {console.table(reviewData.lensReview)}
                     <Table sx={{ minWidth: '50%' }} aria-label='simple table'>
                         <TableBody>
                             <TableRow>
