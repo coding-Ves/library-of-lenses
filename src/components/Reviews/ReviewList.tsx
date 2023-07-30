@@ -1,38 +1,36 @@
 import { Grid, Typography } from '@mui/material';
-import ReviewCard from './ReviewCard.tsx';
-import { useState, useEffect } from 'react';
-import { getAllReviews } from '../../services/reviews.service.ts';
+import { useEffect, useState } from 'react';
+import { getFullReviewData } from '../../services/reviews.service.ts';
 import { LensReview } from '../../types/types.ts';
-import useAuthStore from '../../store/authStore.ts';
-import { updateLoading } from './../../store/loadingStore.ts';
-import useLoadingStore from '../../store/loadingStore.ts';
-import Loader from '../Loader/Loader.tsx';
 import SkeletonList from '../SkeletonList/SkeletonList.tsx';
-
+import ReviewCard from './ReviewCard.tsx';
 const ReviewList = () => {
     const [reviews, setReviews] = useState<LensReview[]>([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        setLoading(true);
-        getAllReviews()
-            .then((fetchedReviews) => {
-                setReviews(fetchedReviews);
-            })
-            .then(() => {
-                setLoading(false);
-            })
-            .catch((error) => {
-                setLoading(false);
-                console.log(error);
-            });
-    }, []);
+        if (reviews.length === 0) {
+            setLoading(true);
+            getFullReviewData()
+                .then((result) => {
+                    setReviews(result);
+                })
+                .then(() => {
+                    setLoading(false);
+                })
+                .catch((error) => {
+                    setLoading(false);
+                    console.log(error);
+                });
+        }
+    }, [reviews]);
 
     return (
         <>
             <Typography variant='h2' align='center' mb={3}>
                 Reviews
             </Typography>
+            {console.log(reviews)}
             {!loading ? (
                 <Grid container spacing={2} p={4}>
                     {reviews.map((review) => {

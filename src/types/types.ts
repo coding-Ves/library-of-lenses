@@ -20,6 +20,8 @@ export type LensReview = {
     galleryURL: string;
     createdOn: Date;
     reviewID: string;
+    gallery?: Array<[galleryItem]>;
+    lensImage?: string;
 };
 
 export type galleryItem = {

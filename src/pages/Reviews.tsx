@@ -1,4 +1,3 @@
-import { Typography } from '@mui/material';
 import ReviewList from '../components/Reviews/ReviewList.tsx';
 
 const Reviews = () => {

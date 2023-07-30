@@ -11,6 +11,12 @@ import {
 import { LensMounts } from '../common/lensMountEnum.ts';
 import { db } from '../config/firebase.ts';
 import { updateUserReviews } from './user.service.ts';
+import {
+    fetchPhotoById,
+    fetchGalleryById,
+    getPhotosByGallery,
+} from './flickr.service.ts';
+import { LensReview } from '../types/types.ts';
 
 export const addReview = (
     lensName: string,
@@ -84,11 +90,35 @@ const fromReviewsDocument = (snapshot: DataSnapshot) => {
     });
 };
 
-export const getAllReviews = () => {
-    return get(ref(db, 'reviews')).then((snapshot) => {
+export const getAllReviews = async () => {
+    return await get(ref(db, 'reviews')).then((snapshot) => {
         if (!snapshot.exists()) {
             return [];
         }
         return fromReviewsDocument(snapshot);
     });
+};
+
+export const getFullReviewData = async () => {
+    const reviews = await getAllReviews();
+
+    const fullReviewData = await Promise.all(
+        reviews.map(async (review) => {
+            const coverPhoto = await fetchPhotoById(review.lensImageURL).then(
+                (result) => {
+                    return result.sizes.size[6].source;
+                }
+            );
+
+            const gallery = await fetchGalleryById(review.galleryURL).then(
+                (result) => {
+                    return result.photoset.photo;
+                }
+            );
+            const galleryPhotos = getPhotosByGallery(gallery);
+            return { ...review, lensImage: coverPhoto, gallery: galleryPhotos };
+        })
+    );
+
+    return fullReviewData;
 };
