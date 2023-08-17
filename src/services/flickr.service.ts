@@ -1,4 +1,3 @@
-import { FLICKR_API_KEY } from '../common/constants.ts';
 import { galleryItem } from '../types/types.ts';
 
 export const URLPhotoHandler = (url: string): string => {

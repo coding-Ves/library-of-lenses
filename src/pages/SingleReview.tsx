@@ -3,6 +3,8 @@ import {
     CardContent,
     CardMedia,
     Divider,
+    ImageList,
+    ImageListItem,
     Paper,
     Table,
     TableBody,
@@ -10,15 +12,8 @@ import {
     TableContainer,
     TableRow,
     Typography,
-    ImageList,
-    ImageListItem,
 } from '@mui/material';
-import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { galleryItem } from '../types/types.ts';
-import { fetchGalleryById } from '../services/flickr.service.ts';
-import { getPhotosByGallery } from '../services/flickr.service.ts';
-import { updateSnackbar } from '../store/snackbarStore.ts';
 
 const SingleReview = () => {
     const location = useLocation();

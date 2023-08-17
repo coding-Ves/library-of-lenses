@@ -29,13 +29,14 @@ It can be found here: https://sketchfab.com/3d-models/dslr-camera-lens-60bfdc6a3
 
 */
 const LensModel = ({ ...props }: JSX.IntrinsicElements['group']) => {
-    const { nodes, materials, animations, scene, scenes, cameras } = useGLTF(
+    const { nodes, materials } = useGLTF(
         '/lensfinal-transformed.glb'
     ) as GLTFResult;
     const scroll = useScroll();
     const lens = useRef<THREE.Group>(null);
     const tl = useRef<gsap.core.Timeline | null>(null);
 
+    // eslint-disable-next-line no-unused-vars
     useFrame((state, delta) => {
         if (tl.current) {
             tl.current.seek(scroll.offset * tl.current.duration());

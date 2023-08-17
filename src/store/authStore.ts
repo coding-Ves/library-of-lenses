@@ -1,6 +1,5 @@
-import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
+import { type User as FirebaseUser } from 'firebase/auth';
 import { create } from 'zustand';
-import { auth } from '../config/firebase.ts';
 import { Roles } from '../common/userEnum.ts';
 
 type UserData = {

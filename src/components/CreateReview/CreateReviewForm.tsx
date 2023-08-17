@@ -32,9 +32,11 @@ import GlobalSnackbar from '../GlobalSnackbar/GlobalSnackbar.tsx';
 
 export const CreateReviewForm = () => {
     const [buttonLoading, setButtonLoading] = useState(false);
+    // eslint-disable-next-line no-unused-vars
     const navigate = useNavigate();
     const { register, handleSubmit } = useForm<LensReview>();
     const [lensMount, setLensMount] = useState('');
+    // eslint-disable-next-line no-unused-vars
     const [rating, setRating] = useState(0);
     const userData = useAuthStore((s) => s.userData);
 
@@ -77,6 +79,7 @@ export const CreateReviewForm = () => {
     };
 
     const handleRatingChange = (
+        // eslint-disable-next-line no-unused-vars
         event: React.SyntheticEvent<Element, Event>,
         value: number | null
     ) => {

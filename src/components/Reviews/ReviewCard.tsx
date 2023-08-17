@@ -11,12 +11,8 @@ import {
     Stack,
     Typography,
 } from '@mui/material';
-import { fetchPhotoById } from '../../services/flickr.service.ts';
+import { Link } from 'react-router-dom';
 import { LensReview } from '../../types/types.ts';
-import { useNavigate, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { updateSnackbar } from '../../store/snackbarStore.ts';
-import { SkeletonCard } from './../SkeletonList/SkeletonCard.tsx';
 
 interface ReviewCardProps {
     lensReview: LensReview;

@@ -1,4 +1,4 @@
-import { Skeleton, Card, Grid } from '@mui/material';
+import { Card, Skeleton } from '@mui/material';
 
 export const SkeletonCard = () => {
     return (

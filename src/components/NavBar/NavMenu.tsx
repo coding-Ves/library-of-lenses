@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
 import {
     AppBar,

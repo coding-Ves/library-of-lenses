@@ -1,22 +1,12 @@
-import {
-    DataSnapshot,
-    DatabaseReference,
-    get,
-    orderByChild,
-    push,
-    query,
-    ref,
-    update,
-} from 'firebase/database';
+import { DataSnapshot, get, push, ref, update } from 'firebase/database';
 import { LensMounts } from '../common/lensMountEnum.ts';
 import { db } from '../config/firebase.ts';
-import { updateUserReviews } from './user.service.ts';
 import {
-    fetchPhotoById,
     fetchGalleryById,
+    fetchPhotoById,
     getPhotosByGallery,
 } from './flickr.service.ts';
-import { LensReview } from '../types/types.ts';
+import { updateUserReviews } from './user.service.ts';
 
 export const addReview = (
     lensName: string,
