@@ -1,4 +1,4 @@
-import { Skeleton, Card, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import SkeletonCard from './SkeletonCard.tsx';
 
 export const SkeletonList = () => {
