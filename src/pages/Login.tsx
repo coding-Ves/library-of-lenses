@@ -5,6 +5,7 @@ import { LENS_BOARD_IMG_2 } from '../common/constants.ts';
 const Login = () => {
     return (
         <Box
+            component='div'
             sx={{
                 height: '100vh',
                 backgroundColor: 'primary.main',

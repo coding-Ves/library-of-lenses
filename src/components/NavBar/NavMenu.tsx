@@ -6,6 +6,8 @@ import {
     Menu,
     MenuItem,
     Toolbar,
+    Button,
+    Stack,
 } from '@mui/material';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -45,62 +47,24 @@ const NavMenu = () => {
     };
 
     return (
-        <AppBar position='static' sx={{ height: '60px' }} color='secondary'>
+        <AppBar position='static' sx={{ height: '50px' }} color='secondary'>
             <Toolbar
                 sx={{
                     display: 'flex',
                     alignItems: 'flex-start',
                     justifyContent: 'space-between',
-                    p: '5px',
                 }}
             >
-                <IconButton
-                    size='medium'
-                    edge='start'
-                    color='inherit'
-                    aria-label='menu'
-                    onClick={handleOpenNavMenu}
-                    sx={{ mr: 2 }}
-                >
-                    <MenuIcon fontSize='large' />
-                </IconButton>
-                <Menu
-                    sx={{ mt: '50px' }}
-                    id='menu-appbar'
-                    anchorEl={anchorElNav}
-                    anchorOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    keepMounted
-                    transformOrigin={{
-                        vertical: 'top',
-                        horizontal: 'right',
-                    }}
-                    open={Boolean(anchorElNav)}
-                    onClose={handleCloseNavMenu}
-                >
-                    <MenuItem sx={{ width: '150px' }} component={Link} to={'/'}>
-                        Home
-                    </MenuItem>
-                    <MenuItem
-                        sx={{ width: '150px' }}
-                        component={Link}
-                        to={'/reviews'}
-                    >
+                <Stack direction='row' m={0.5}>
+                    <Button component={Link} to={'/reviews'} variant='text'>
                         Reviews
-                    </MenuItem>
+                    </Button>
                     {userData?.role === 'admin' ? (
-                        <MenuItem
-                            sx={{ width: '150px' }}
-                            component={Link}
-                            to={'/create-review'}
-                        >
+                        <Button component={Link} to={'/create-review'}>
                             Create Review
-                        </MenuItem>
+                        </Button>
                     ) : null}
-                </Menu>
-
+                </Stack>
                 {user ? (
                     <>
                         <IconButton
@@ -112,7 +76,7 @@ const NavMenu = () => {
                             color='inherit'
                         >
                             <Avatar
-                                sx={{ width: 35, height: 35 }}
+                                sx={{ width: 30, height: 30 }}
                                 alt={userData?.username}
                                 src={userData?.avatarURL}
                             />
@@ -133,13 +97,6 @@ const NavMenu = () => {
                             open={Boolean(anchorElUser)}
                             onClose={handleCloseUserMenu}
                         >
-                            <MenuItem
-                                sx={{ width: '150px' }}
-                                component={Link}
-                                to={'/my-account'}
-                            >
-                                My Account
-                            </MenuItem>
                             <MenuItem onClick={handleLogout}>Logout</MenuItem>
                         </Menu>
                     </>

@@ -30,7 +30,7 @@ const ReviewList = () => {
             <Typography variant='h2' align='center' mb={3}>
                 Reviews
             </Typography>
-            {console.log(reviews)}
+
             {!loading ? (
                 <Grid container spacing={2} p={4}>
                     {reviews.map((review) => {

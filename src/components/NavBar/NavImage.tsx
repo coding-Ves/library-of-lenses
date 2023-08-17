@@ -17,7 +17,7 @@ const NavImage = () => {
                 backgroundRepeat: 'repeat-x',
             }}
         >
-            <Link to='/'>
+            <Link to='/reviews'>
                 <Avatar
                     src='/white_logo_transparent.png'
                     alt='logo image'

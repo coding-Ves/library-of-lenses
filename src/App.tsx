@@ -9,6 +9,7 @@ import { auth } from './config/firebase.ts';
 import { getUserByUsername } from './services/user.service.ts';
 import useAuthStore, { updateUser, updateUserData } from './store/authStore.ts';
 import useLoadingStore from './store/loadingStore.ts';
+import Contacts from './components/Landing/Contacts.tsx';
 
 // App.tsx is used as a Layout component for react router
 
@@ -36,7 +37,7 @@ const App = () => {
     return (
         <>
             <NavBar />
-            <Typography variant='h4'>App.js outlet</Typography>
+            <Contacts />
             <Outlet />
             <GlobalSnackbar />
         </>
