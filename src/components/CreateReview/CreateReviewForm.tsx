@@ -1,3 +1,6 @@
+/* tslint:disable:no-unused-variable */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { Camera } from '@mui/icons-material';
 import {
     Box,
@@ -18,7 +21,6 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 import { LensMounts } from '../../common/lensMountEnum.ts';
 import errorHandler from '../../services/errors.service.ts';
 import {
@@ -32,12 +34,9 @@ import GlobalSnackbar from '../GlobalSnackbar/GlobalSnackbar.tsx';
 
 export const CreateReviewForm = () => {
     const [buttonLoading, setButtonLoading] = useState(false);
-    // eslint-disable-next-line no-unused-vars
-    const navigate = useNavigate();
     const { register, handleSubmit } = useForm<LensReview>();
     const [lensMount, setLensMount] = useState('');
-    // eslint-disable-next-line no-unused-vars
-    const [rating, setRating] = useState(0);
+    const [_rating, setRating] = useState(0);
     const userData = useAuthStore((s) => s.userData);
 
     interface IFormInputs {
@@ -79,8 +78,7 @@ export const CreateReviewForm = () => {
     };
 
     const handleRatingChange = (
-        // eslint-disable-next-line no-unused-vars
-        event: React.SyntheticEvent<Element, Event>,
+        _event: React.SyntheticEvent<Element, Event>,
         value: number | null
     ) => {
         if (value !== null) {

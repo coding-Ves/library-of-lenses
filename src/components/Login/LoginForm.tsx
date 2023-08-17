@@ -53,6 +53,7 @@ export const LoginForm = () => {
             <GlobalSnackbar />
             <Container component='main' maxWidth='sm'>
                 <Box
+                    component='div'
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',

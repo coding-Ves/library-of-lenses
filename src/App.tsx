@@ -7,7 +7,6 @@ import NavBar from './components/NavBar/NavBar.tsx';
 import { auth } from './config/firebase.ts';
 import { getUserByUsername } from './services/user.service.ts';
 import useAuthStore, { updateUser, updateUserData } from './store/authStore.ts';
-import useLoadingStore from './store/loadingStore.ts';
 
 // App.tsx is used as a Layout component for react router
 

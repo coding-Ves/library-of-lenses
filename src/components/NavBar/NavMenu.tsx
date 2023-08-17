@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import { AccountCircle, Menu as MenuIcon } from '@mui/icons-material';
+import { AccountCircle } from '@mui/icons-material';
 import {
     AppBar,
     Avatar,
@@ -19,7 +18,6 @@ import { updateSnackbar } from '../../store/snackbarStore.ts';
 const NavMenu = () => {
     const user = useAuthStore((s) => s.user);
     const userData = useAuthStore((s) => s.userData);
-    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
     const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
     const handleLogout = () => {
@@ -32,15 +30,8 @@ const NavMenu = () => {
             });
     };
 
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchorElNav(event.currentTarget);
-    };
     const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElUser(event.currentTarget);
-    };
-
-    const handleCloseNavMenu = () => {
-        setAnchorElNav(null);
     };
 
     const handleCloseUserMenu = () => {

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useGLTF, useScroll } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { gsap } from 'gsap';
@@ -36,8 +37,8 @@ const LensModel = ({ ...props }: JSX.IntrinsicElements['group']) => {
     const lens = useRef<THREE.Group>(null);
     const tl = useRef<gsap.core.Timeline | null>(null);
 
-    // eslint-disable-next-line no-unused-vars
-    useFrame((state, delta) => {
+    // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+    useFrame((_state, _delta) => {
         if (tl.current) {
             tl.current.seek(scroll.offset * tl.current.duration());
         }
