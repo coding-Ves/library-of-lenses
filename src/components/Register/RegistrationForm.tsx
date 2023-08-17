@@ -132,6 +132,7 @@ export const RegistrationForm = () => {
             <GlobalSnackbar />
             <Container component='main' maxWidth='sm'>
                 <Box
+                    component='div'
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
